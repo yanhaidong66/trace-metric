@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>top.haidong556</groupId>
-    <artifactId>trace</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>metric</artifactId>
+    <version>1.0</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
