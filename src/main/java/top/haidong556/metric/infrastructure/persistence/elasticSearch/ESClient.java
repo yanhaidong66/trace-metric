@@ -115,7 +115,7 @@ public class ESClient {
      * @return 创建结果
      * @throws IOException IOException
      */
-    public boolean createDocument(String indexName, String documentId, String documentContent) throws IOException {
+    public <T> boolean createDocument(String indexName, String documentId, T documentContent) throws IOException {
         IndexRequest<Object> indexRequest = new IndexRequest.Builder<>()
                 .index(indexName)
                 .id(documentId)

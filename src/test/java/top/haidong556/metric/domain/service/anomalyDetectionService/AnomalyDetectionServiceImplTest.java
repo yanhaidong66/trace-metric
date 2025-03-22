@@ -9,14 +9,8 @@ import top.haidong556.metric.MetricApplication;
 import top.haidong556.metric.domain.common.AnomalyResult;
 import top.haidong556.metric.domain.common.EWMAAnomalyDetectorFactory;
 import top.haidong556.metric.domain.common.SlidingWindowFactory;
-import top.haidong556.metric.domain.model.machineMonitorAggregate.MachineIdentification;
-import top.haidong556.metric.domain.model.machineMonitorAggregate.MachineMonitorAggregateRoot;
-import top.haidong556.metric.domain.model.machineMonitorAggregate.MachineMonitorAggregateRootFactory;
 import top.haidong556.metric.domain.model.machineMonitorAggregate.MonitorConfig;
-import top.haidong556.metric.domain.model.metricAggregate.MetricAggregateFactory;
 import top.haidong556.metric.domain.model.metricAggregate.MetricAggregateRoot;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = MetricApplication.class)
 class AnomalyDetectionServiceImplTest {
@@ -168,7 +162,7 @@ class AnomalyDetectionServiceImplTest {
     @Test
     void detectAnomalyTest() throws Exception {
         // 构造模拟的 MetricAggregateRoot
-        MetricAggregateRoot metricAggregateRoot = MetricAggregateFactory.getInstance().createByJson(json);
+        MetricAggregateRoot metricAggregateRoot = MetricAggregateRoot.Builder.buildByJson(json);
 
         // 执行异常检测
         AnomalyResult result = anomalyDetectionService.detectAnomaly(metricAggregateRoot);

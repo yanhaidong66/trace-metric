@@ -103,7 +103,7 @@ public class MonitorConfig {
                 // 提取线程数 system.process.numThreads
                 if (root.getSystemEntity() != null
                         && root.getSystemEntity().getProcess() != null) {
-                    return root.getSystemEntity().getProcess().getNumThreads();
+                    return root.getSystemEntity().getProcess().getNum_threads();
                 }
                 return null;
             }

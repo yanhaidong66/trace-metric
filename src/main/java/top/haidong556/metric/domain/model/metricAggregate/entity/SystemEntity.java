@@ -1,13 +1,16 @@
 package top.haidong556.metric.domain.model.metricAggregate.entity;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * SystemEntity类用于描述机器的整体状态，包括网络和进程相关信息。
  */
 @Getter
-@Builder
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class SystemEntity {
     public Network network; // 网络状态信息
     public Process process; // 进程状态信息
@@ -26,7 +29,9 @@ public class SystemEntity {
      * Network类用于封装机器的网络状态信息。
      */
     @Getter
-    @Builder
+    
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Network {
         public String name; // 网络接口名称
         public In in; // 网络输入统计信息
@@ -43,7 +48,9 @@ public class SystemEntity {
          * In类用于封装网络输入的统计信息。
          */
         @Getter
-        @Builder
+        
+        @AllArgsConstructor
+        @NoArgsConstructor
         public static class In {
             public long packets; // 接收的数据包数量
             public long errors; // 接收时发生的错误数量
@@ -64,7 +71,9 @@ public class SystemEntity {
          * Out类用于封装网络输出的统计信息。
          */
         @Getter
-        @Builder
+        
+        @AllArgsConstructor
+        @NoArgsConstructor
         public static class Out {
             public long bytes; // 发送的字节数
             public long errors; // 发送时发生的错误数量
@@ -86,20 +95,22 @@ public class SystemEntity {
      * Process类用于封装机器上运行进程的状态信息。
      */
     @Getter
-    @Builder
+    
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Process {
         public Cgroup cgroup; // 控制组信息
         public String state; // 进程状态
-        public long numThreads; // 进程中的线程数量
-        public String cmdLine; // 启动进程的命令行
+        public long num_threads; // 进程中的线程数量
+        public String cmdline; // 启动进程的命令行
         public Memory memory; // 进程的内存使用情况
         public Cpu cpu; // CPU 使用情况
         public Fd fd; // 文件描述符信息
         @Override
         public String toString() {
             return "{\n" +
-                    "        \"num_threads\": " + numThreads + ",\n" +
-                    "        \"cmdline\": \"" + cmdLine + "\",\n" +
+                    "        \"num_threads\": " + num_threads + ",\n" +
+                    "        \"cmdline\": \"" + cmdline + "\",\n" +
                     "        \"memory\": " + (memory != null ? memory.toString() : "null") + ",\n" +
                     "        \"cpu\": " + (cpu != null ? cpu.toString() : "null") + ",\n" +
                     "        \"fd\": " + (fd != null ? fd.toString() : "null") + ",\n" +
@@ -112,17 +123,19 @@ public class SystemEntity {
          * Cgroup类用于封装进程的控制组信息。
          */
         @Getter
-        @Builder
+        
+        @AllArgsConstructor
+        @NoArgsConstructor
         public static class Cgroup {
             public String id; // 控制组ID
             public String path; // 控制组路径
-            public long cgroupsVersion; // 控制组版本
+            public long cgv; // 控制组版本
             @Override
             public String toString() {
                 return "{\n" +
                         "            \"id\": \"" + id + "\",\n" +
                         "            \"path\": \"" + path + "\",\n" +
-                        "            \"cgroups_version\": " + cgroupsVersion + "\n" +
+                        "            \"cgroups_version\": " + cgv + "\n" +
                         "        }";
             }
         }
@@ -131,7 +144,9 @@ public class SystemEntity {
          * Memory类用于封装进程的内存使用情况。
          */
         @Getter
-        @Builder
+        
+        @AllArgsConstructor
+        @NoArgsConstructor
         public static class Memory {
             public long share; // 进程共享内存大小
             public Rss rss; // 进程常驻集大小
@@ -149,7 +164,9 @@ public class SystemEntity {
              * Rss类用于封装进程的常驻集信息。
              */
             @Getter
-            @Builder
+            
+            @AllArgsConstructor
+            @NoArgsConstructor
             public static class Rss {
                 public long bytes; // 常驻集字节数
                 public double pct; // 常驻集占系统总内存的百分比
@@ -167,13 +184,15 @@ public class SystemEntity {
          * Cpu类用于封装进程的 CPU 使用情况。
          */
         @Getter
-        @Builder
+        
+        @AllArgsConstructor
+        @NoArgsConstructor
         public static class Cpu {
-            public String startTime; // 进程的启动时间
+            public String start_time; // 进程的启动时间
             public Total total; // CPU 总使用情况
             public String toString() {
                 return "{\n" +
-                        "            \"start_time\": \"" + startTime + "\",\n" +
+                        "            \"start_time\": \"" + start_time + "\",\n" +
                         "            \"total\": " + (total != null ? total.toString() : "null") + "\n" +
                         "        }";
             }
@@ -182,7 +201,9 @@ public class SystemEntity {
              * Total类用于封装 CPU 总使用情况。
              */
             @Getter
-            @Builder
+            
+            @AllArgsConstructor
+            @NoArgsConstructor
             public static class Total {
                 public Norm norm; // 归一化 CPU 使用率
                 public long value; // CPU 使用总时间
@@ -199,7 +220,9 @@ public class SystemEntity {
                  * Norm类用于封装归一化 CPU 使用率信息。
                  */
                 @Getter
-                @Builder
+                
+                @AllArgsConstructor
+                @NoArgsConstructor
                 public static class Norm {
                     public double pct; // 归一化 CPU 使用百分比
 
@@ -219,7 +242,9 @@ public class SystemEntity {
          * Fd类用于封装进程的文件描述符信息。
          */
         @Getter
-        @Builder
+        
+        @AllArgsConstructor
+        @NoArgsConstructor
         public static class Fd {
             public long open; // 进程打开的文件描述符数量
             public Limit limit; // 进程的文件描述符限制
@@ -235,7 +260,9 @@ public class SystemEntity {
              * Limit类用于封装文件描述符限制信息。
              */
             @Getter
-            @Builder
+            
+            @AllArgsConstructor
+            @NoArgsConstructor
             public static class Limit {
                 public long hard; // 文件描述符硬限制
                 public long soft; // 文件描述符软限制

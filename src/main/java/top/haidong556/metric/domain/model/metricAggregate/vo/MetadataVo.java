@@ -1,15 +1,15 @@
 package top.haidong556.metric.domain.model.metricAggregate.vo;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
-@Builder
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class MetadataVo {
-    private final String beat;
-    private final String type;
-    private final String version;
+    private String beat;
+    private String type;
+    private String version;
 
     @Override
     public String toString() {

@@ -120,17 +120,17 @@ class MetricAggregateRootTest {
                 }
             }
             """;
-    MetricAggregateFactory metricAggregateFactory=MetricAggregateFactory.getInstance();
 
     @Test
     void testToString() throws Exception {
-        System.out.println(metricAggregateFactory.createByJson(json));
+        System.out.println(MetricAggregateRoot.Builder.buildByJson(json));
     }
 
     @Test
     void testBuilder() throws Exception {
         // 构建对象
-        MetricAggregateRoot metricAggregateRoot = MetricAggregateRoot.Builder.build1(json);
+        MetricAggregateRoot metricAggregateRoot = MetricAggregateRoot.Builder.buildByJson(json);
+        System.out.println(metricAggregateRoot);
 
         // 顶层字段校验
         assertNotNull(metricAggregateRoot);

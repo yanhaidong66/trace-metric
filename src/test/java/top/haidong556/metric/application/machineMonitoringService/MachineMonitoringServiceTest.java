@@ -4,10 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import top.haidong556.metric.MetricApplication;
-import top.haidong556.metric.domain.model.metricAggregate.MetricAggregateFactory;
 import top.haidong556.metric.domain.model.metricAggregate.MetricAggregateRoot;
 
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = MetricApplication.class)
 class MachineMonitoringServiceTest {
     private final String json = """
@@ -128,10 +126,9 @@ class MachineMonitoringServiceTest {
     @Autowired
     private MachineMonitoringService machineMonitoringService;
 
-    private MetricAggregateFactory metricAggregateFactory=MetricAggregateFactory.getInstance();
 
     @Test
     void monitorMachine() throws Exception {
-        machineMonitoringService.monitorMachine(metricAggregateFactory.createByJson(json));
+        machineMonitoringService.monitorMachine(MetricAggregateRoot.Builder.buildByJson(json));
     }
 }

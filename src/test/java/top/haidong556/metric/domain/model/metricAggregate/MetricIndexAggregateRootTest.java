@@ -1,6 +1,5 @@
 package top.haidong556.metric.domain.model.metricAggregate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import top.haidong556.metric.domain.model.metricAggregate.entity.AgentEntity;
@@ -130,8 +129,8 @@ class MetricIndexAggregateRootTest {
             """;
 
     @BeforeEach
-    void setUp() throws JsonProcessingException {
-        metricAggregateRoot = MetricAggregateRoot.Builder.build(json);
+    void setUp() throws Exception {
+        metricAggregateRoot = MetricAggregateRoot.Builder.buildByJson(json);
     }
 
 
@@ -170,14 +169,14 @@ class MetricIndexAggregateRootTest {
     void getProcessEntity() {
         ProcessEntity process = metricAggregateRoot.getProcessEntity();
         assertNotNull(process);
-        assertEquals("/usr/libexec/polkitd --no-debug", process.getCommandLine());
+        assertEquals("/usr/libexec/polkitd --no-debug", process.getCommand_line());
         assertEquals("/usr/libexec/polkitd", process.getExecutable());
         assertEquals("polkitd", process.getName());
         assertEquals(4793, process.getPid());
         assertEquals("sleeping", process.getState());
-        assertEquals("/", process.getWorkingDirectory());
+        assertEquals("/", process.getWorking_directory());
         assertArrayEquals(new String[]{"/usr/libexec/polkitd", "--no-debug"}, process.getArgs().toArray());
-        assertEquals(4793, process.getPgId());
+        assertEquals(4793, process.getPgid());
 
         ProcessEntity.Parent parent = process.getParent();
         assertNotNull(parent);
@@ -185,7 +184,7 @@ class MetricIndexAggregateRootTest {
 
         ProcessEntity.Cpu cpu = process.getCpu();
         assertNotNull(cpu);
-        assertEquals("2025-03-13T16:45:22.000Z", cpu.getStartTime());
+        assertEquals("2025-03-13T16:45:22.000Z", cpu.getStart_time());
         assertEquals(0, cpu.getPct());
 
         ProcessEntity.Memory memory = process.getMemory();
@@ -201,8 +200,8 @@ class MetricIndexAggregateRootTest {
 
         SystemEntity.Process systemProcess = system.getProcess();
         assertNotNull(systemProcess);
-        assertEquals(3, systemProcess.getNumThreads());
-        assertEquals("/usr/libexec/polkitd --no-debug", systemProcess.getCmdLine());
+        assertEquals(3, systemProcess.getNum_threads());
+        assertEquals("/usr/libexec/polkitd --no-debug", systemProcess.getCmdline());
 
         SystemEntity.Process.Memory systemMemory = systemProcess.getMemory();
         assertNotNull(systemMemory);
@@ -216,7 +215,7 @@ class MetricIndexAggregateRootTest {
 
         SystemEntity.Process.Cpu systemCpu = systemProcess.getCpu();
         assertNotNull(systemCpu);
-        assertEquals("2025-03-13T16:45:22.000Z", systemCpu.getStartTime());
+        assertEquals("2025-03-13T16:45:22.000Z", systemCpu.getStart_time());
 
         SystemEntity.Process.Cpu.Total totalCpu = systemCpu.getTotal();
         assertNotNull(totalCpu);
@@ -277,7 +276,7 @@ class MetricIndexAggregateRootTest {
         assertNotNull(agent);
         assertEquals("metricbeat", agent.getType());
         assertEquals("8.17.3", agent.getVersion());
-        assertEquals("32936e4b-c241-4369-82e2-794a7847c367", agent.getEphemeralId());
+        assertEquals("32936e4b-c241-4369-82e2-794a7847c367", agent.getEphemeral_id());
         assertEquals("cab8659a-5c83-46c6-a73f-4af6cbfc88c9", agent.getId());
         assertEquals("Lxyten", agent.getName());
     }

@@ -31,7 +31,7 @@ public class DeduplicationFilter implements AbstractFilter<MetricAggregateRoot> 
 
     @Override
     public void apply(MetricAggregateRoot input) throws Exception {
-        if(metricRepo.findById(input.getMetricAggregateId().getMetricAggregateId())!=null){
+        if(metricRepo.findById(input.getMetricAggregateId().getMetricAggregateRootId())!=null){
             throw new Exception("metricAggregateId is exist");
         }
     }

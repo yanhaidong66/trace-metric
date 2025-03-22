@@ -1,15 +1,15 @@
 package top.haidong556.metric.domain.model.metricAggregate.vo;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
-@Builder
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class EventVo {
-    private final long duration;
-    private final String dataset;
-    private final String module;
+    private long duration;
+    private String dataset;
+    private String module;
 
     @Override
     public String toString() {

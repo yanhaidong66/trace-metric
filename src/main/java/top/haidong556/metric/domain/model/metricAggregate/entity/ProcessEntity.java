@@ -1,25 +1,31 @@
 package top.haidong556.metric.domain.model.metricAggregate.entity;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 @Getter
-@Builder
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProcessEntity {
-    public String commandLine;
+    public String command_line;
     public String executable;
     public String name;
     public long pid;
     public String state;
     public Parent parent;
-    public String workingDirectory;
+    public String working_directory;
     public List<String> args;
-    public long pgId;
+    public long pgid;
     public Cpu cpu;
     public Memory memory;
 
-    @Builder
+    
     @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Parent {
         public long pid;
         @Override
@@ -29,21 +35,25 @@ public class ProcessEntity {
                     "        }";
         }
     }
-    @Builder
+    
     @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Cpu {
-        public String startTime;
+        public String start_time;
         public double pct;
         @Override
         public String toString() {
             return "{\n" +
-                    "            \"start_time\": \"" + startTime + "\",\n" +
+                    "            \"start_time\": \"" + start_time + "\",\n" +
                     "            \"pct\": " + pct + "\n" +
                     "        }";
         }
     }
-    @Builder
+    
     @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Memory {
         public double pct;
         @Override
@@ -57,15 +67,15 @@ public class ProcessEntity {
     @Override
     public String toString() {
         return "{\n" +
-                "        \"command_line\": \"" + commandLine + "\",\n" +
+                "        \"command_line\": \"" + command_line + "\",\n" +
                 "        \"executable\": \"" + executable + "\",\n" +
                 "        \"name\": \"" + name + "\",\n" +
                 "        \"pid\": " + pid + ",\n" +
                 "        \"state\": \"" + state + "\",\n" +
                 "        \"parent\": " + (parent != null ? parent.toString() : "null") + ",\n" +
-                "        \"working_directory\": \"" + workingDirectory + "\",\n" +
+                "        \"working_directory\": \"" + working_directory + "\",\n" +
                 "        \"args\": " + jsonArray(args) + ",\n" +
-                "        \"pgid\": " + pgId + ",\n" +
+                "        \"pgid\": " + pgid + ",\n" +
                 "        \"cpu\": " + (cpu != null ? cpu.toString() : "null") + ",\n" +
                 "        \"memory\": " + (memory != null ? memory.toString() : "null") + "\n" +
                 "    }";

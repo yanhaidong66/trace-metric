@@ -1,18 +1,19 @@
-package top.haidong556.metric.domain.model.metricAggregate;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+package top.haidong556.metric.infrastructure.persistence.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import top.haidong556.metric.domain.model.metricAggregate.entity.HostEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import top.haidong556.metric.MetricApplication;
+import top.haidong556.metric.domain.model.metricAggregate.MetricAggregateRoot;
 
-import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-class MetricAggregateFactoryTest {
+@Slf4j
+@SpringBootTest(classes = MetricApplication.class)
+class MetricKafkaProducerTest {
     private final String json = """
             {
                 "@timestamp": "2025-03-13T16:46:29.861Z",
@@ -129,82 +130,30 @@ class MetricAggregateFactoryTest {
             }
             """;
 
-
-    private MetricAggregateFactory factory ;
-    private MetricAggregateRoot root ;
-    @BeforeEach
-    void setUp() throws Exception {
-        factory = MetricAggregateFactory.getInstance();
-        root = factory.createByJson(json);;
-    }
-    @Test
-    void getInstance() {
-        MetricAggregateFactory instance1 = MetricAggregateFactory.getInstance();
-        MetricAggregateFactory instance2 = MetricAggregateFactory.getInstance();
-        Assertions.assertNotNull(instance1);
-        Assertions.assertSame(instance1, instance2, "Factory instance should be singleton");
-    }
+    @Autowired
+    private MetricKafkaProducer metricKafkaProducer;
 
     @Test
-    void createByJson() throws Exception {
+    void sendMetricEventLoop() throws InterruptedException {
+        // 单线程池，后台无限发送
+        Executors.newSingleThreadExecutor().submit(() -> {
+            while (true) {
+                try {
+                    // 构建测试数据
+                    MetricAggregateRoot metric = MetricAggregateRoot.Builder.buildByJson(json);
 
+                    metricKafkaProducer.sendMetricEvent(metric);
+                    log.info("发送一条 metric 测试消息");
 
-        // 基本校验
-        Assertions.assertNotNull(root);
-        Assertions.assertNotNull(root.getMetricAggregateId());
-        Assertions.assertNotNull(root.getMachineIdentification());
+                    // 每隔1秒发一条
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (Exception e) {
+                    log.error("发送过程中发生异常", e);
+                }
+            }
+        });
 
-        // 校验时间戳，假设解析时映射 @timestamp -> root.timestamp
-        Assertions.assertEquals("2025-03-13T16:46:29.861Z", root.getTimestamp());
-
-        // 校验 HostEntity
-        Assertions.assertNotNull(root.getHostEntity());
-        Assertions.assertEquals("Lxyten", root.getHostEntity().getHostname());  // host.hostname
-        Assertions.assertEquals("lxyten", root.getHostEntity().getName());      // host.name
-        Assertions.assertEquals("x86_64", root.getHostEntity().getArchitecture());
-
-        // 校验 IP 是否包含特定地址
-        Assertions.assertTrue(root.getHostEntity().getIp().contains("198.18.0.1"));
-        Assertions.assertTrue(root.getHostEntity().getIp().contains("10.129.87.223"));
-
-        // 校验 MAC 地址是否包含某个值
-        Assertions.assertTrue(root.getHostEntity().getMac().contains("00-15-5D-07-1E-13"));
-
-        // 校验 host ID
-        Assertions.assertEquals("ddd8185a42e34d71a32110784f8a2913", root.getHostEntity().getId());
-
-        // 校验是否 containerized
-        Assertions.assertFalse(root.getHostEntity().isContainerized());
-
-        // 校验系统状态（从 system.state 解析）
-        Assertions.assertNotNull(root.getSystemEntity());
-        Assertions.assertEquals("sleeping", root.getSystemEntity().getState());
-
-        // 打印结果
-        System.out.println("MetricAggregateId: " + root.getMetricAggregateId().getMetricAggregateId());
-        System.out.println("MachineIdentification: " + root.getMachineIdentification().getMachineIdentification());
-    }
-
-    @Test
-    void generateMetricAggregateId() throws Exception {
-        MetricAggregateFactory factory = MetricAggregateFactory.getInstance();
-        String aggregateId = factory.generateMetricAggregateId(factory.createByJson(json));
-        Assertions.assertNotNull(aggregateId);
-        System.out.println("Generated MetricAggregateId: " + aggregateId);
-    }
-
-    @Test
-    void generateMachineIdentification() {
-        // 生成机器标识符
-        String machineId = factory.generateMachineIdentification(root);
-
-        // 校验生成的机器标识符
-        Assertions.assertNotNull(machineId);
-        Assertions.assertTrue(machineId.contains("ddd8185a42e34d71a32110784f8a2913"));
-        Assertions.assertTrue(machineId.contains("lxyten"));  // 注意，这里是 "lxyten" 而不是 "test-host"
-        Assertions.assertTrue(machineId.contains("198.18.0.1"));  // 假设第一个 IP 地址是 "198.18.0.1"
-
-        // 打印生成的机器标识符
-        System.out.println("Generated MachineIdentification: " + machineId);
+        // 保持测试线程不退出（测试时长10分钟）
+        TimeUnit.MINUTES.sleep(10);
     }
 }

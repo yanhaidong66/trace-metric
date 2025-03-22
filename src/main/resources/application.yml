@@ -1,27 +1,26 @@
 spring:
   kafka:
-    bootstrap-servers: 10.129.42.122:9092  # Kafka 服务器地址
+    bootstrap-servers: 10.129.42.122:9092
     consumer:
-      group-id: example-group1  # 消费组 ID
-      enable-auto-commit: true  # 自动提交偏移量
-      auto-commit-interval: 100  # 提交间隔
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer  # 键反序列化器
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer  # 值反序列化器
-      auto-offset-reset: earliest  # 从最早的消息开始消费
-      max-poll-records: 500  # 每次拉取的最大消息数
-      session-timeout: 10000  # 会话超时时间
-      heartbeat-interval: 3000  # 消费者心跳间隔
-      request-timeout: 30000  # 请求超时时间
+      group-id: example-group1
+      enable-auto-commit: true
+      auto-commit-interval: 100
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+      max-poll-records: 500
+      session-timeout: 10000
+      heartbeat-interval: 3000
+      request-timeout: 30000
     producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer  # 键序列化器
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer  # 值序列化器
-      acks: all  # 确认策略，确保所有副本都收到消息
-      retries: 3  # 发送失败后的重试次数
-      batch-size: 16384  # 批量发送消息大小（字节）
-      linger-ms: 1  # 批量发送的延迟时间
-      buffer-memory: 33554432  # 内存缓冲区大小（字节）
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+      retries: 3
+      batch-size: 16384
+      linger-ms: 1
+      buffer-memory: 33554432
 
-  # Redis 配置
   data:
     redis:
       host: localhost
@@ -29,3 +28,8 @@ spring:
       password: your_password
       database: 0
       timeout: 2000
+
+  elasticsearch:
+    uris: http://127.0.0.1:9200
+    connection-timeout: 5s
+    socket-timeout: 10s

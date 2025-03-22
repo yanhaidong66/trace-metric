@@ -1,11 +1,12 @@
 package top.haidong556.metric.domain.model.machineMonitorAggregate;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MachineIdentification {
-    private final String machineIdentification;
-    public MachineIdentification(String machineIdentification) {
-        this.machineIdentification = machineIdentification;
-    }
+    private String machineIdentification;
 }

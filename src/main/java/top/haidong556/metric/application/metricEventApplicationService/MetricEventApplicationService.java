@@ -6,7 +6,6 @@ import top.haidong556.metric.domain.common.AnomalyResult;
 import top.haidong556.metric.application.machineMonitoringService.MachineMonitoringService;
 import top.haidong556.metric.application.metricEventApplicationService.filter.*;
 import top.haidong556.metric.application.common.filterChainTemplate.FilterChain;
-import top.haidong556.metric.domain.model.metricAggregate.MetricAggregateFactory;
 import top.haidong556.metric.domain.model.metricAggregate.MetricAggregateRoot;
 import top.haidong556.metric.domain.model.metricAggregate.MetricRepo;
 
@@ -15,13 +14,11 @@ import top.haidong556.metric.domain.model.metricAggregate.MetricRepo;
 public class MetricEventApplicationService {
 
     private FilterChain<String> preCreationFilterChain = new FilterChain<String>();
-    private MetricAggregateFactory metricAggregateFactory;
     private MachineMonitoringService machineMonitoringService;
     private FilterChain<MetricAggregateRoot> postCreationFilterChain = new FilterChain<MetricAggregateRoot>();
 
     @Autowired
     public MetricEventApplicationService(MachineMonitoringService machineMonitoringService, MetricRepo metricRepo) {
-        this.metricAggregateFactory = MetricAggregateFactory.getInstance();
         this.machineMonitoringService = machineMonitoringService;
         preCreationFilterChain
                 .addFilter(new FormatValidationFilter())
@@ -36,7 +33,7 @@ public class MetricEventApplicationService {
 
     public void processMetricEvent(String metricJson) throws Exception {
         preCreationFilterChain.executeFilters(metricJson);
-        MetricAggregateRoot metricAggregateRoot = metricAggregateFactory.createByJson(metricJson);
+        MetricAggregateRoot metricAggregateRoot = MetricAggregateRoot.Builder.buildByJson(metricJson);
         postCreationFilterChain.executeFilters(metricAggregateRoot);
         AnomalyResult anomalyResult = machineMonitoringService.monitorMachine(metricAggregateRoot);
     }

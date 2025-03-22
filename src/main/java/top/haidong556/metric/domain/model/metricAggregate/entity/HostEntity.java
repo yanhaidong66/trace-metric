@@ -1,14 +1,18 @@
 package top.haidong556.metric.domain.model.metricAggregate.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 @Getter
 /**
  * HostEntity类用于封装有关主机的信息。
  */
-@Builder
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class HostEntity {
     public List<String> ip; // 主机的IP地址列表
     public List<String> mac; // 主机的MAC地址列表
@@ -19,9 +23,6 @@ public class HostEntity {
     public String id; // 主机的唯一标识符
     public boolean containerized; // 标识主机是否为容器化环境
 
-    public String getMachineIdentification(){
-        return ip+"-"+name+"-"+hostname+"-"+id;
-    }
 
     @Override
     public String toString() {
@@ -47,7 +48,9 @@ public class HostEntity {
      * OS内部类用于封装主机操作系统的相关信息。
      */
     @Getter
-    @Builder
+    
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Os {
         public String codename; // 操作系统代号（例如 Ubuntu 20.04 的代号为 Focal Fossa）
         public String type; // 操作系统的类型（如 Linux, Windows）

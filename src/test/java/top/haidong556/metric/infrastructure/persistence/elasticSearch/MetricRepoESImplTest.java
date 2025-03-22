@@ -1,20 +1,17 @@
 package top.haidong556.metric.infrastructure.persistence.elasticSearch;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import top.haidong556.metric.MetricApplication;
-import top.haidong556.metric.domain.model.machineMonitorAggregate.MachineMonitorAggregateRootFactory;
-import top.haidong556.metric.domain.model.metricAggregate.MetricAggregateFactory;
 import top.haidong556.metric.domain.model.metricAggregate.MetricAggregateRoot;
-import top.haidong556.metric.domain.model.metricAggregate.entity.MetricAggregateId;
 
-import java.io.IOException;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {MetricApplication.class})
@@ -135,57 +132,49 @@ class MetricRepoESImplTest {
             }
             """;
 
-    private MetricAggregateFactory factory;
     private MetricAggregateRoot root;
     @Autowired
     private MetricRepoESImpl metricRepoESImpl;
     private MetricAggregateRoot metricAggregateRoot;
-    private MetricAggregateFactory metricAggregateFactory = MetricAggregateFactory.getInstance();
 
     @BeforeEach
     void setUp() throws Exception {
-        factory = MetricAggregateFactory.getInstance();
-        metricAggregateRoot = metricAggregateFactory.createByJson(json);
-        // 尝试删除索引，避免索引已存在的问题
-        try {
-            metricRepoESImpl.deleteIndex();
-        } catch (Exception e) {
-            // 若索引不存在，忽略异常
-        }
-        // 创建索引
+        Assertions.assertTrue(metricRepoESImpl.deleteIndex());
         metricRepoESImpl.createIndex();
+        metricAggregateRoot = MetricAggregateRoot.Builder.buildByJson(json);
     }
 
     @AfterEach
     void tearDown() {
         // 每个测试方法执行后删除索引
-        metricRepoESImpl.deleteIndex();
+        Assertions.assertTrue(metricRepoESImpl.deleteIndex());
     }
 
     @Test
     void createIndex() throws Exception {
-        assertTrue(metricRepoESImpl.createIndex());
     }
 
     @Test
     void save() {
         MetricAggregateRoot result = metricRepoESImpl.save(metricAggregateRoot);
         assertNotNull(result);
-        assertEquals(metricAggregateRoot.getMetricAggregateId().getMetricAggregateId(), result.getMetricAggregateId().getMetricAggregateId());
+        assertEquals(metricAggregateRoot.getMetricAggregateId(), result.getMetricAggregateId());
     }
 
     @Test
-    void findById() {
+    void findById() throws InterruptedException {
         MetricAggregateRoot saved = metricRepoESImpl.save(metricAggregateRoot);
-        String id = saved.getMetricAggregateId().getMetricAggregateId();
+        String id = saved.getMetricAggregateId().getMetricAggregateRootId();
+        sleep(1000);
         MetricAggregateRoot found = metricRepoESImpl.findById(id);
         assertNotNull(found);
-        assertEquals(id, found.getMetricAggregateId().getMetricAggregateId());
+        assertEquals(id, found.getMetricAggregateId().getMetricAggregateRootId());
     }
 
     @Test
-    void findAll() {
+    void findAll() throws InterruptedException {
         metricRepoESImpl.save(metricAggregateRoot);
+        sleep(1000);
         List<MetricAggregateRoot> all = metricRepoESImpl.findAll();
         assertFalse(all.isEmpty());
     }
@@ -193,7 +182,7 @@ class MetricRepoESImplTest {
     @Test
     void deleteById() {
         MetricAggregateRoot saved = metricRepoESImpl.save(metricAggregateRoot);
-        String id = saved.getMetricAggregateId().getMetricAggregateId();
+        String id = saved.getMetricAggregateId().getMetricAggregateRootId();
         boolean deleted = metricRepoESImpl.deleteById(id);
         assertTrue(deleted);
         MetricAggregateRoot found = metricRepoESImpl.findById(id);
@@ -201,17 +190,19 @@ class MetricRepoESImplTest {
     }
 
     @Test
-    void count() {
+    void count() throws InterruptedException {
         metricRepoESImpl.save(metricAggregateRoot);
+        sleep(1000);
         long count = metricRepoESImpl.count();
         assertTrue(count > 0);
     }
 
     @Test
-    void findByTimestampRange() {
+    void findByTimestampRange() throws InterruptedException {
         metricRepoESImpl.save(metricAggregateRoot);
         String startTime = "2025-03-13T16:40:00.000Z";
         String endTime = "2025-03-13T16:50:00.000Z";
+        sleep(1000);
         List<MetricAggregateRoot> results = metricRepoESImpl.findByTimestampRange(startTime, endTime);
         assertFalse(results.isEmpty());
     }

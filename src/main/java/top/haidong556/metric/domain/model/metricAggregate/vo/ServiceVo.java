@@ -1,16 +1,16 @@
 package top.haidong556.metric.domain.model.metricAggregate.vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Builder
+
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ServiceVo {
     String type;
-    public ServiceVo() {}
-    public ServiceVo(String type) {
-        this.type = type;
-    }
     @Override
     public String toString() {
         return "{\n" +

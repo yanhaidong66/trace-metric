@@ -1,9 +1,6 @@
 package top.haidong556.metric.application.metricEventApplicationService.filter;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import top.haidong556.metric.application.common.filterChainTemplate.AbstractFilter;
-import top.haidong556.metric.domain.model.metricAggregate.MetricAggregateFactory;
 import top.haidong556.metric.domain.model.metricAggregate.MetricAggregateRoot;
 import top.haidong556.metric.domain.model.metricAggregate.MetricRepo;
 public class PersistenceFilter implements AbstractFilter<MetricAggregateRoot> {
