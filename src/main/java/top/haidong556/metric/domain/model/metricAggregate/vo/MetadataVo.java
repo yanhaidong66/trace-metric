@@ -3,7 +3,6 @@ package top.haidong556.metric.domain.model.metricAggregate.vo;
 import lombok.*;
 
 @Getter
-
 @AllArgsConstructor
 @NoArgsConstructor
 public class MetadataVo {
